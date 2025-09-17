@@ -12,7 +12,9 @@ server.use( express.json() )
 
 server.get( "/posts", ( req, res ) => {
 
-	if ( !req.headers.token ) {
+	console.log( req.headers.authorization )
+
+	if ( !req.headers.authorization ) {
 
 		res.status( 401 ).end()
 		return
@@ -20,7 +22,9 @@ server.get( "/posts", ( req, res ) => {
 
 	try {
 
-		jwt.verify( req.headers.token, JWT_SECRET )
+		const token = req.headers.authorization.split( " " )[ 1 ]
+
+		jwt.verify( token, JWT_SECRET )
 
 		res.send( DB.posts )
 	}
@@ -33,7 +37,7 @@ server.get( "/posts", ( req, res ) => {
 
 server.post( "/posts", ( req, res ) => {
 
-	if ( !req.headers.token ) {
+	if ( !req.headers.authorization ) {
 
 		res.status( 401 ).end()
 		return
@@ -41,7 +45,9 @@ server.post( "/posts", ( req, res ) => {
 
 	try {
 
-		const user = jwt.verify( req.headers.token, JWT_SECRET )
+		const token = req.headers.authorization.split( " " )[ 1 ]
+
+		const user = jwt.verify( token, JWT_SECRET )
 
 		const permissions = DB.permissions[ user.username ]
 

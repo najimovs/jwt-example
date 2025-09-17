@@ -5,17 +5,31 @@ import * as DB from "./db.js"
 
 const JWT_SECRET = "hello_world"
 
-// const data = {
-// 	username: "najimov",
-// 	isAdmin: true,
-// }
-
-// const token = jwt.sign( data, SECRET, { expiresIn: "1h" } )
-
 const server = express()
 
 server.use( cors() )
 server.use( express.json() )
+
+server.get( "/posts", ( req, res ) => {
+
+	if ( !req.headers.token ) {
+
+		res.status( 401 ).end()
+		return
+	}
+
+	try {
+
+		jwt.verify( req.headers.token, JWT_SECRET )
+
+		res.send( DB.posts )
+	}
+	catch( error ) {
+
+		res.status( 401 ).end()
+		return
+	}
+} )
 
 server.post( "/login", ( req, res ) => {
 
@@ -46,7 +60,7 @@ server.post( "/login", ( req, res ) => {
 		isAdmin: user.isAdmin,
 	}
 
-	const token = jwt.sign( payload, JWT_SECRET, { expiresIn: "1h" } )
+	const token = jwt.sign( payload, JWT_SECRET, { expiresIn: 30 } )
 
 	res.status( 201 ).send( {
 		username,

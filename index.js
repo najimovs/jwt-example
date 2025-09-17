@@ -3,7 +3,7 @@ import cors from "cors"
 import jwt from "jsonwebtoken"
 import * as DB from "./db.js"
 
-const JWT_SECRET = "hello_world"
+const JWT_SECRET = process.env.JWT_SECRET
 
 const server = express()
 
@@ -11,8 +11,6 @@ server.use( cors() )
 server.use( express.json() )
 
 server.get( "/posts", ( req, res ) => {
-
-	console.log( req.headers.authorization )
 
 	if ( !req.headers.authorization ) {
 

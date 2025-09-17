@@ -1,0 +1,19 @@
+{
+	"name": "jwt-example",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node --watch index.js",
+		"start": "node index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.16.1",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^5.1.0"
+	}
+}

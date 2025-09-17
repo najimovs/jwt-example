@@ -31,6 +31,36 @@ server.get( "/posts", ( req, res ) => {
 	}
 } )
 
+server.post( "/posts", ( req, res ) => {
+
+	if ( !req.headers.token ) {
+
+		res.status( 401 ).end()
+		return
+	}
+
+	try {
+
+		const user = jwt.verify( req.headers.token, JWT_SECRET )
+
+		if ( user.isAdmin ) {
+
+			DB.posts.push( req.body.value )
+
+			res.status( 201 ).end()
+		}
+		else {
+
+			res.status( 403 ).end()
+		}
+	}
+	catch( error ) {
+
+		res.status( 401 ).end()
+		return
+	}
+} )
+
 server.post( "/login", ( req, res ) => {
 
 	const { username, password } = req.body
@@ -60,7 +90,7 @@ server.post( "/login", ( req, res ) => {
 		isAdmin: user.isAdmin,
 	}
 
-	const token = jwt.sign( payload, JWT_SECRET, { expiresIn: 30 } )
+	const token = jwt.sign( payload, JWT_SECRET, { expiresIn: 60 * 60 * 24 * 7 } )
 
 	res.status( 201 ).send( {
 		username,

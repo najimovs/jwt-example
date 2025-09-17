@@ -6,7 +6,7 @@ export const users = {
 	},
 	firdavs: {
 		password: "123",
-		isAdmin: false,
+		isAdmin: true,
 		name: "Firdavs Normurodov",
 	},
 	asror: {

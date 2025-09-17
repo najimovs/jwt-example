@@ -43,16 +43,17 @@ server.post( "/posts", ( req, res ) => {
 
 		const user = jwt.verify( req.headers.token, JWT_SECRET )
 
-		if ( user.isAdmin ) {
+		const permissions = DB.permissions[ user.username ]
 
-			DB.posts.push( req.body.value )
-
-			res.status( 201 ).end()
-		}
-		else {
+		if ( !permissions || !permissions.includes( 1 ) ) {
 
 			res.status( 403 ).end()
+			return
 		}
+
+		DB.posts.push( req.body.value )
+
+		res.status( 201 ).end()
 	}
 	catch( error ) {
 
